@@ -1,0 +1,25 @@
+=== Q2(c) boosting vs bagging ===
+method,learners,learners_used,train_acc,val_acc,test_acc,train_seconds
+bagging,25,25,1.0000,0.8125,0.7875,22.63
+boosting(depth 4),25,25,0.7667,0.3250,0.3125,6.90
+bagging,50,50,1.0000,0.9000,0.8375,44.20
+boosting(depth 4),50,50,0.9083,0.3375,0.3375,13.85
+bagging,100,100,1.0000,0.9000,0.8500,89.07
+boosting(depth 4),100,100,1.0000,0.3875,0.3750,27.59
+
+Heavy face: training position 61 (dataset index 104), true label 10
+final weight 0.0705 = 16.9 x uniform (1/240)
+misclassified in 88 of 100 rounds
+predicted label, rounds 1-20: [10, 1, 2, 8, 4, 12, 8, 38, 0, 3, 4, 10, 8, 9, 39, 2, 4, 3, 25, 12]
+most frequent wrong label: 4
+rounds where it was classified correctly (weight before -> after the update):
+  round 1: 0.00417 -> 0.00083  (alpha_t = 1.718)
+  round 12: 0.03201 -> 0.00190  (alpha_t = 3.341)
+  round 21: 0.04460 -> 0.00414  (alpha_t = 2.666)
+  round 29: 0.05098 -> 0.00374  (alpha_t = 3.002)
+  round 37: 0.05779 -> 0.00427  (alpha_t = 2.991)
+  round 45: 0.06144 -> 0.00454  (alpha_t = 2.993)
+  round 53: 0.06313 -> 0.00490  (alpha_t = 2.919)
+  round 61: 0.06682 -> 0.00478  (alpha_t = 3.041)
+  round 68: 0.04563 -> 0.00351  (alpha_t = 2.933)
+  round 77: 0.05809 -> 0.00424  (alpha_t = 3.012)

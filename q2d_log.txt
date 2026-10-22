@@ -1,0 +1,25 @@
+=== Q2(d) ===
+Final bagged ensemble B = 200; boosting depth 4, 100 learners
+test_set,model,accuracy,mean_confidence
+clean,tree,0.6250,0.9670
+clean,bagging,0.8250,0.3754
+clean,boosting,0.3750,0.1181
+masked,tree,0.2500,1.0000
+masked,bagging,0.7000,0.2652
+masked,boosting,0.3500,0.1148
+
+tree: prediction changes on 55 of 80 test faces
+bagging: prediction changes on 17 of 80 test faces
+boosting: prediction changes on 17 of 80 test faces
+faces where exactly one of bagging/boosting changes its prediction: 20
+
+Differing face: test position 1 (dataset index 6), true label 0
+  tree: clean -> 0 (conf 1.000), masked -> 35 (conf 1.000)
+  bagging: clean -> 0 (conf 0.355), masked -> 0 (conf 0.250)
+  boosting: clean -> 4 (conf 0.110), masked -> 12 (conf 0.101)
+  bagging clean: top-3 votes [0:71 23:49 7:12], pairwise tree disagreement on this face = 0.806
+  bagging masked: top-3 votes [0:50 23:37 33:22], pairwise tree disagreement on this face = 0.877
+  bagging: 82 of 200 trees change their vote after masking; 111 of 200 trees test a masked pixel on this face's path
+  boosting clean q top-3 [4:0.110 12:0.101 0:0.085] | masked q top-3 [12:0.101 4:0.089 0:0.085]
+  boosting: 6 of 100 learners change their vote; they carry 0.060 of the total alpha
+  boosting: 17 of 100 learners test a masked pixel on this face's path; alpha share 0.176

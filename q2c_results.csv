@@ -1,0 +1,7 @@
+method,learners,learners_used,train_acc,val_acc,test_acc,train_seconds
+bagging,25,25,1.0000,0.8125,0.7875,22.63
+boosting(depth 4),25,25,0.7667,0.3250,0.3125,6.90
+bagging,50,50,1.0000,0.9000,0.8375,44.20
+boosting(depth 4),50,50,0.9083,0.3375,0.3375,13.85
+bagging,100,100,1.0000,0.9000,0.8500,89.07
+boosting(depth 4),100,100,1.0000,0.3875,0.3750,27.59

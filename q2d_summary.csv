@@ -1,0 +1,7 @@
+test_set,model,accuracy,mean_confidence
+clean,tree,0.6250,0.9670
+clean,bagging,0.8250,0.3754
+clean,boosting,0.3750,0.1181
+masked,tree,0.2500,1.0000
+masked,bagging,0.7000,0.2652
+masked,boosting,0.3500,0.1148

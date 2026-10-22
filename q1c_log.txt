@@ -1,0 +1,11 @@
+=== Q1(c) diagnostics (disagreement and margin on validation set; OOB on training images, uncovered images excluded) ===
+B,oob_acc,oob_coverage,disagreement_val,vote_margin_val,val_acc
+1,0.2258,93,nan,1.0000,0.3750
+5,0.2624,221,0.8050,0.2175,0.4250
+10,0.3167,240,0.8031,0.2388,0.6875
+25,0.5250,240,0.7927,0.2675,0.8125
+50,0.6333,240,0.8123,0.2518,0.9000
+100,0.7167,240,0.8126,0.2444,0.9000
+200,0.7167,240,0.8201,0.2440,0.9125
+
+Final B (highest validation accuracy 0.9125, ties -> smallest B): 200

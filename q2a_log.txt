@@ -1,0 +1,17 @@
+Stump splits on x <= 4.5
+sample   x label  h1 wrong  w_before  w*e^(a*wrong)  w_after
+     1   1     0   0 False    0.1000         0.1000   0.0556
+     2   2     0   0 False    0.1000         0.1000   0.0556
+     3   3     1   0  True    0.1000         0.3000   0.1667
+     4   4     0   0 False    0.1000         0.1000   0.0556
+     5   5     1   1 False    0.1000         0.1000   0.0556
+     6   6     1   1 False    0.1000         0.1000   0.0556
+     7   7     2   1  True    0.1000         0.3000   0.1667
+     8   8     1   1 False    0.1000         0.1000   0.0556
+     9   9     2   1  True    0.1000         0.3000   0.1667
+    10  10     2   1  True    0.1000         0.3000   0.1667
+
+weighted error eps_1 = 0.4000   (random-guess bound 1-1/K = 0.6667)
+alpha_1 = log((1-eps)/eps) + log(K-1) = 1.0986   (e^alpha = 3.0000)
+normaliser (sum of w*e^(alpha*wrong)) = 1.8000
+sum of updated weights = 1.0000

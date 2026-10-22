@@ -1,0 +1,29 @@
+=== Q1(d) summary ===
+test_set,model,accuracy,mean_confidence
+clean,tree,0.6250,0.9670
+clean,bagging,0.8250,0.3754
+masked,tree,0.2500,1.0000
+masked,bagging,0.7000,0.2652
+
+Frozen tree setting: {'max_depth': None, 'min_samples_leaf': 4, 'random_state': 242005}
+Final bagged ensemble size B = 200
+Case selection rule: lowest positions in the test set
+
+--- clean test set ---
+tree acc 0.6250, mean conf 0.9670
+bagging acc 0.8250, mean conf 0.3754
+bagging corrects tree: 22 faces | both wrong: 8 faces | tree right but bagging wrong: 6 faces | both right: 44 faces
+[bagging_corrects_tree] test_pos=5 (dataset idx 27) true=2 tree=4 (conf 1.000) bagging=2 top3 votes [2:50 27:26 4:18] true-class votes=50/200
+[bagging_corrects_tree] test_pos=7 (dataset idx 39) true=3 tree=17 (conf 1.000) bagging=3 top3 votes [3:29 17:26 2:17] true-class votes=29/200
+[both_wrong] test_pos=14 (dataset idx 70) true=7 tree=10 (conf 1.000) bagging=10 top3 votes [10:69 7:63 23:22] true-class votes=63/200
+[both_wrong] test_pos=19 (dataset idx 99) true=9 tree=7 (conf 1.000) bagging=7 top3 votes [7:58 17:28 5:23] true-class votes=3/200
+
+--- masked test set ---
+tree acc 0.2500, mean conf 1.0000
+bagging acc 0.7000, mean conf 0.2652
+bagging corrects tree: 36 faces | both wrong: 24 faces | tree right but bagging wrong: 0 faces | both right: 20 faces
+[bagging_corrects_tree] test_pos=0 (dataset idx 4) true=0 tree=35 (conf 1.000) bagging=0 top3 votes [0:41 33:22 3:19] true-class votes=41/200
+[bagging_corrects_tree] test_pos=1 (dataset idx 6) true=0 tree=35 (conf 1.000) bagging=0 top3 votes [0:50 23:37 33:22] true-class votes=50/200
+[both_wrong] test_pos=4 (dataset idx 20) true=2 tree=35 (conf 1.000) bagging=33 top3 votes [33:32 35:18 2:16] true-class votes=16/200
+[both_wrong] test_pos=6 (dataset idx 36) true=3 tree=35 (conf 1.000) bagging=33 top3 votes [33:30 3:25 12:23] true-class votes=25/200
+
