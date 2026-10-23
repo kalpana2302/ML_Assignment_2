@@ -1,10 +1,3 @@
-"""
-Q2(a): one complete SAMME round on a 3-class toy example with 10 samples, using the SAME
-SAMME class (samme.py) that is used on the faces.
-
-Toy data: one feature x = 1..10, labels y (3 classes), weak learner = decision stump (depth 1).
-Run:  python q2a.py
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]

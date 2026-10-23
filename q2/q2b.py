@@ -1,14 +1,4 @@
-"""
-Q2(b): SAMME on Olivetti faces. Depths {1,2,3,4} x rounds {10,25,50,100}.
-Selection on CLEAN VALIDATION accuracy only; ties -> shallowest depth, then fewest rounds.
-For each depth one 100-round model is trained and the first T learners are evaluated
-(identical to training T rounds, since the weak learner seed is fixed).
-Then the selected (depth, rounds) is refit, frozen (q2_config.json, q2_selected_model.joblib) and its
-weighted training error, learner weight, maximum sample weight and the weight of the 10 heaviest
-training images are plotted over rounds (weights = those used to fit each round).
 
-Run:  python q2b.py       (requires split.npz)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]

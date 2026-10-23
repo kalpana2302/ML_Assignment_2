@@ -1,31 +1,8 @@
-"""
-Q3: bias and variance as measured quantities (parts a-d, one pass over 30 refits).
-
-Resampling: 30 new training sets, each made by drawing, WITHIN each identity, 6 faces with replacement
-from that identity's 6 original training faces. One generator default_rng(242005) is used for everything:
-first the 30 resamples (saved to q3_resamples.npy), then the bagging bootstrap draws in the fixed order
-below (so the script must be run as a whole). Tree / boosting random_state = 242005.
-
-Per repetition r (nothing is re-tuned):
-  single trees at 3 settings : shallow (max_depth=4, msl=4), selected (Q1 config), deeper (None, msl=1)
-  bagging, final B (Q1)      : bootstrap of size 240 from the resampled set, as in Q1(b)
-  bagging, 100 trees         : at the same three settings
-  boosting                   : selected depth/rounds from q2_config.json (SAMME)
-Class vectors p_r(x_i) on the clean test set: tree = one-hot prediction; bagging = vote fractions
-(votes / B); boosting = normalised weighted vote q_k(x).
-Bias^2 = mean_i ||pbar_i - e_i||^2 ; Variance = mean_{i,r} ||p_r_i - pbar_i||^2 (N = 80 test faces).
-Accuracy mean/std over the 30 refits: population std (ddof = 0).
-Tree disagreement of the 100-tree ensembles: mean pairwise disagreement on the clean test set,
-averaged over refits. Leaf statistics are counted on the rows of each resampled training set
-(duplicate rows count separately), averaged over refits.
-
-Run:  python q3.py        (requires outputs of q1 and q2b; takes a while: ~700 trees per refit)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
-from paths import P as OUT  # noqa: E402
+from paths import P as OUT 
 import json
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
@@ -65,7 +42,7 @@ np.save(OUT("q3_resamples.npy"), resamples)
 distinct = np.mean([len(np.unique(r)) for r in resamples]) / K
 
 # ---- 2. refits ----
-P, AC, AM = {}, {}, {}                                          # class vectors, clean acc, masked acc
+P, AC, AM = {}, {}, {}                                        
 LEAF, DIS = {n: [] for n in SETTINGS}, {}
 
 
@@ -79,7 +56,7 @@ boost_kept = []
 for r in range(R):
     X, y = Xtr[resamples[r]], ytr[resamples[r]]
 
-    for name, cfg in SETTINGS.items():                          # single trees
+    for name, cfg in SETTINGS.items():                         
         t = DecisionTreeClassifier(**cfg).fit(X, y)
         add(f"tree_{name}", np.eye(K)[t.predict(Xte)], acc(t.predict(Xte)), acc(t.predict(Xte_m)))
         _, cnt = np.unique(t.apply(X), return_counts=True)
@@ -87,14 +64,14 @@ for r in range(R):
         LEAF[name].append((t.get_depth(), n_leaves, len(X) / n_leaves, float(np.sum(cnt == 1)) / n_leaves))
 
     plan = [("bag_final", q1cfg, final_B)] + [(f"bag_{n}", c, BAG_100) for n, c in SETTINGS.items()]
-    for key, cfg, B in plan:                                    # bagging (fixed order -> reproducible)
+    for key, cfg, B in plan:                                  
         trees, _ = fit_bagging(X, y, B, rng, cfg)
         tp = tree_predictions(trees, Xte)
         counts = vote_counts(tp)
         add(key, counts / B, acc(counts.argmax(1)), acc(vote_counts(tree_predictions(trees, Xte_m)).argmax(1)))
         DIS.setdefault(key, []).append(mean_pairwise_disagreement(tp))
 
-    bm = SAMME(q2cfg["depth"], q2cfg["rounds"], K, SEED).fit(X, y)   # boosting
+    bm = SAMME(q2cfg["depth"], q2cfg["rounds"], K, SEED).fit(X, y)  
     assert len(bm.learners) > 0, f"boosting kept no learner in repetition {r}"
     q = bm.predict_proba(Xte)
     add("boosting", q, acc(q.argmax(1)), acc(bm.predict(Xte_m)))

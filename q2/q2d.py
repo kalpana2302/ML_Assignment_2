@@ -1,14 +1,3 @@
-"""
-Q2(d): frozen single tree, final bagged model (Q1) and selected boosting model (Q2(b)) on the clean and
-masked test sets. Confidence = mean winning probability / vote fraction over all 80 test images:
-  tree: predict_proba of its predicted class | bagging: winning vote fraction | boosting: max_k q_k(x).
-
-Differing face: lowest test position where EXACTLY ONE of bagging / boosting changes its prediction
-when the centre block is masked. For it, the script reports tree disagreement for bagging and
-alpha-weighted learner statistics for boosting.
-
-Run:  python q2d.py       (requires outputs of q1a-q1c and q2b)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]

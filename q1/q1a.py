@@ -1,13 +1,3 @@
-"""
-Q1(a): single decision-tree baseline.
-
-Grid: max_depth in {2, 4, 8, 16, None} x min_samples_leaf in {1, 2, 4}.
-Models are fit on the clean training set only. The setting is chosen on VALIDATION accuracy only.
-Ties -> shallowest depth (None counts as deepest), then largest min_samples_leaf.
-The chosen setting is frozen into q1_config.json and reused by Q1(b), (c), (d).
-
-Run:  python q1a.py        (requires split.npz from split_data.py)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]

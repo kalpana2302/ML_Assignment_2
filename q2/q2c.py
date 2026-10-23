@@ -1,14 +1,3 @@
-"""
-Q2(c): boosting vs bagging with 25, 50 and 100 learners + one heavily weighted training face.
-
-- Boosting: SAMME with the depth selected in Q2(b), refit for each T (timed).
-- Bagging: accuracies from the saved Q1 ensembles (q1_bagging_models.joblib); training time from
-  refitting same-sized ensembles with fresh bootstrap draws (default_rng(242005)).
-- Heavy face: the training face with the largest FINAL weight (after the last round) in the selected
-  boosting model; its prediction history and weight trajectory are reported and plotted.
-
-Run:  python q2c.py       (requires q1b.py and q2b.py outputs)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]

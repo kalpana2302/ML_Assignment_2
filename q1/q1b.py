@@ -1,20 +1,3 @@
-"""
-Q1(b): bagging implemented from scratch.
-
-- Each bootstrap sample has the ORIGINAL training-set size (240), drawn with replacement
-  from the whole training set (plain bootstrap).
-- Every tree uses the frozen setting from Q1(a) (read from q1_config.json).
-- B in {1, 5, 10, 25, 50, 100, 200}. Ensembles are independent per B (fresh bootstrap
-  samples and trees for every B), all drawn from one generator: default_rng(242005).
-- Prediction: hard majority vote; ties go to the lowest class index (np.argmax).
-- Reports train / val / test accuracy and the average number of distinct training
-  examples per bootstrap sample vs its theoretical expectation n * (1 - (1 - 1/n)^n).
-
-The trained ensembles and their bootstrap indices are saved to q1_bagging_models.joblib
-so that Q1(c) and Q1(d) reuse exactly the same models.
-
-Run:  python q1b.py       (requires split.npz and q1_config.json)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]
@@ -37,7 +20,7 @@ LOG_FILE = P("q1b_log.txt")
 
 def load_config():
     with open(CONFIG_FILE) as f:
-        return json.load(f)        # {"max_depth": None/int, "min_samples_leaf": int, "random_state": int}
+        return json.load(f)      
 
 
 def fit_bagging(X, y, B, rng, config):
@@ -68,7 +51,7 @@ def vote_counts(preds, n_classes=N_CLASSES):
 
 def bagging_predict(trees, X):
     counts = vote_counts(tree_predictions(trees, X))
-    return np.argmax(counts, axis=1)                       # ties -> lowest class index
+    return np.argmax(counts, axis=1)                       
 
 
 def accuracy(y_true, y_pred):
@@ -83,7 +66,7 @@ def main():
     Xte, yte = d["X_test"], d["y_test"]
     n = len(Xtr)
 
-    theory = n * (1.0 - (1.0 - 1.0 / n) ** n)             # expected distinct examples per bootstrap
+    theory = n * (1.0 - (1.0 - 1.0 / n) ** n)            
 
     rng = np.random.default_rng(SEED)
     models, rows = {}, []

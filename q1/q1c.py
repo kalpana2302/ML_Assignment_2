@@ -1,21 +1,3 @@
-"""
-Q1(c): ensemble diagnostics for every B, using the SAME ensembles trained in Q1(b)
-(loaded from q1_bagging_models.joblib).
-
-For every B:
-  - OOB accuracy      : each training image is voted on only by trees whose bootstrap sample did
-                        not contain it. Images with no OOB tree are EXCLUDED; coverage is reported.
-  - Mean pairwise disagreement between trees : fraction of VALIDATION images on which two trees
-                        predict different labels, averaged over all B*(B-1)/2 pairs (undefined for B=1).
-  - Mean vote margin  : on the VALIDATION set, winning vote fraction minus runner-up vote fraction,
-                        averaged over images.
-  - Validation accuracy of the ensemble, used to select the final B
-    (ties -> smallest B). The choice is saved to q1_final_B.json.
-
-Vote ties are resolved to the lowest class index (np.argmax), as in Q1(b).
-
-Run:  python q1c.py       (requires q1_bagging_models.joblib from q1b.py)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]
@@ -87,7 +69,7 @@ def main():
         trees, boot_idx = models[B]["trees"], models[B]["boot_idx"]
         oob_acc, coverage = oob_accuracy(trees, boot_idx, Xtr, ytr)
 
-        val_preds = tree_predictions(trees, Xva)           # (B, 80)
+        val_preds = tree_predictions(trees, Xva)         
         counts = vote_counts(val_preds)
         rows.append({
             "B": B,

@@ -1,18 +1,3 @@
-"""
-Q1(d): frozen single tree vs final bagged model on the clean and masked test sets.
-
-- Frozen tree: DecisionTreeClassifier(**config) from q1_config.json, fit on the clean training set.
-- Final bagged model: the ensemble of size final_B (q1_final_B.json) from q1_bagging_models.joblib.
-- Accuracy and mean prediction confidence over all 80 test images, for both sets:
-    tree     confidence = probability of its predicted class (training class fraction in the leaf)
-    bagging  confidence = winning vote fraction (winning votes / B)
-- Case studies, on BOTH test sets: two faces where bagging is correct and the tree is wrong, and two
-  faces where both are wrong. Selection rule: lowest positions in the test set.
-  For each face: true label, tree prediction and confidence, bagging prediction, top-3 vote counts
-  and the votes received by the true class. Figures are saved per test set.
-
-Run:  python q1d.py       (requires outputs of q1a.py, q1b.py, q1c.py)
-"""
 import sys
 from pathlib import Path
 _ROOT = Path(__file__).resolve().parents[1]
@@ -43,15 +28,15 @@ def evaluate(tree, bag_trees, X, y):
     tree_conf = proba.max(axis=1)
 
     counts = vote_counts(tree_predictions(bag_trees, X))
-    bag_pred = np.argmax(counts, axis=1)                  # ties -> lowest class index
-    bag_conf = counts.max(axis=1) / B                     # winning vote fraction
+    bag_pred = np.argmax(counts, axis=1)                 
+    bag_conf = counts.max(axis=1) / B                     
     return {"tree_pred": tree_pred, "tree_conf": tree_conf,
             "bag_pred": bag_pred, "bag_conf": bag_conf, "counts": counts,
             "tree_acc": accuracy(y, tree_pred), "bag_acc": accuracy(y, bag_pred)}
 
 
 def top3_text(counts_row):
-    order = np.argsort(-counts_row, kind="stable")[:3]    # ties -> lowest class index first
+    order = np.argsort(-counts_row, kind="stable")[:3]   
     return " ".join(f"{int(c)}:{int(counts_row[c])}" for c in order)
 
 
@@ -63,7 +48,7 @@ def main():
     bag_trees = joblib.load(MODELS_FILE)["models"][final_B]["trees"]
 
     d = load_split()
-    tree = DecisionTreeClassifier(**config).fit(d["X_train"], d["y_train"])   # frozen tree from Q1(a)
+    tree = DecisionTreeClassifier(**config).fit(d["X_train"], d["y_train"])  
     y = d["y_test"]
     test_idx = d["test_idx"]
     sets = {"clean": d["X_test"], "masked": d["X_test_masked"]}
