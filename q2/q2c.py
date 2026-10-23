@@ -1,4 +1,19 @@
+"""
+Q2(c): boosting vs bagging with 25, 50 and 100 learners + one heavily weighted training face.
 
+- Boosting: SAMME with the depth selected in Q2(b), refit for each T (timed).
+- Bagging: accuracies from the saved Q1 ensembles (q1_bagging_models.joblib); training time from
+  refitting same-sized ensembles with fresh bootstrap draws (default_rng(242005)).
+- Heavy face: the training face with the largest FINAL weight (after the last round) in the selected
+  boosting model; its prediction history and weight trajectory are reported and plotted.
+
+Run:  python q2c.py       (requires q1b.py and q2b.py outputs)
+"""
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import time
 import numpy as np
@@ -15,7 +30,7 @@ LEARNERS = [25, 50, 100]
 
 d = load_split()
 Xtr, ytr, Xva, yva, Xte, yte = (d["X_train"], d["y_train"], d["X_val"], d["y_val"], d["X_test"], d["y_test"])
-with open("q2_config.json") as f:
+with open(P("q2_config.json")) as f:
     cfg = json.load(f)
 with open(CONFIG_FILE) as f:
     q1cfg = json.load(f)
@@ -39,7 +54,7 @@ for T in LEARNERS:
                 f"{accuracy(yte, bm.predict(Xte)):.4f},{t_boost:.2f}")
 
 # ---- heavily weighted training face (selected boosting model) ----
-sel = joblib.load("q2_selected_model.joblib")
+sel = joblib.load(P("q2_selected_model.joblib"))
 i = int(np.argmax(sel.w_after[-1]))                       # largest final weight
 pred_i = sel.train_pred[:, i]
 correct = pred_i == ytr[i]
@@ -56,9 +71,9 @@ for t in np.where(correct)[0][:10]:
 
 text = "\n".join(["=== Q2(c) boosting vs bagging ===", *rows, "", *face])
 print(text)
-with open("q2c_results.csv", "w") as f:
+with open(P("q2c_results.csv"), "w") as f:
     f.write("\n".join(rows) + "\n")
-with open("q2c_log.txt", "w") as f:
+with open(P("q2c_log.txt"), "w") as f:
     f.write(text + "\n")
 
 fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.5, 2.6), gridspec_kw={"width_ratios": [1, 2]})
@@ -74,5 +89,5 @@ a2.legend(fontsize=7)
 a2.tick_params(labelsize=7)
 a2.grid(alpha=0.3)
 fig.tight_layout()
-fig.savefig("q2c_heavy_face.png", dpi=200)
-fig.savefig("q2c_heavy_face.pdf")
+fig.savefig(P("q2c_heavy_face.png"), dpi=200)
+fig.savefig(P("q2c_heavy_face.pdf"))

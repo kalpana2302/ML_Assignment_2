@@ -1,0 +1,4 @@
+model,bias2,variance,acc_mean,acc_std
+single tree (selected: depth None, leaf 4),0.3609,0.6066,0.5162,0.0427
+bagging (B=200),0.5174,0.0245,0.7413,0.0419
+boosting (depth 4, 100 rounds),0.8767,0.0174,0.3638,0.0867

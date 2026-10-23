@@ -1,4 +1,19 @@
+"""
+Q2(d): frozen single tree, final bagged model (Q1) and selected boosting model (Q2(b)) on the clean and
+masked test sets. Confidence = mean winning probability / vote fraction over all 80 test images:
+  tree: predict_proba of its predicted class | bagging: winning vote fraction | boosting: max_k q_k(x).
 
+Differing face: lowest test position where EXACTLY ONE of bagging / boosting changes its prediction
+when the centre block is masked. For it, the script reports tree disagreement for bagging and
+alpha-weighted learner statistics for boosting.
+
+Run:  python q2d.py       (requires outputs of q1a-q1c and q2b)
+"""
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import numpy as np
 import joblib
@@ -14,12 +29,12 @@ Xtr, ytr, yte = d["X_train"], d["y_train"], d["y_test"]
 sets = {"clean": d["X_test"], "masked": d["X_test_masked"]}
 with open(CONFIG_FILE) as f:
     q1cfg = json.load(f)
-with open("q1_final_B.json") as f:
+with open(P("q1_final_B.json")) as f:
     B = json.load(f)["final_B"]
 
 tree = DecisionTreeClassifier(**q1cfg).fit(Xtr, ytr)               # frozen tree
 bag_trees = joblib.load(MODELS_FILE)["models"][B]["trees"]          # final bagged model
-boost = joblib.load("q2_selected_model.joblib")                     # selected boosting model
+boost = joblib.load(P("q2_selected_model.joblib"))                     # selected boosting model
 
 # pixels of the masked block (rows and cols 24..39) in flattened 64x64 images
 rr, cc = np.divmod(np.arange(4096), 64)
@@ -96,12 +111,12 @@ if len(cand):
         ax.set_title(f"{tag}: bag {res[tag]['bagging'][0][p]}, boost {res[tag]['boosting'][0][p]}", fontsize=7)
     fig.suptitle(f"true {yte[p]}", fontsize=8)
     fig.tight_layout()
-    fig.savefig("q2d_face.png", dpi=200)
-    fig.savefig("q2d_face.pdf")
+    fig.savefig(P("q2d_face.png"), dpi=200)
+    fig.savefig(P("q2d_face.pdf"))
 
-with open("q2d_summary.csv", "w") as f:
+with open(P("q2d_summary.csv"), "w") as f:
     f.write("\n".join(summary) + "\n")
 text = "\n".join(["=== Q2(d) ===", *log])
 print(text)
-with open("q2d_log.txt", "w") as f:
+with open(P("q2d_log.txt"), "w") as f:
     f.write(text + "\n")

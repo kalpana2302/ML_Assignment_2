@@ -16,6 +16,11 @@ Vote ties are resolved to the lowest class index (np.argmax), as in Q1(b).
 
 Run:  python q1c.py       (requires q1_bagging_models.joblib from q1b.py)
 """
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import numpy as np
 import joblib
@@ -26,9 +31,9 @@ from matplotlib.ticker import FixedLocator, FixedFormatter
 from split_data import load_split
 from q1b import (B_VALUES, MODELS_FILE, N_CLASSES, tree_predictions, vote_counts, accuracy)
 
-RESULTS_FILE = "q1c_results.csv"
-LOG_FILE = "q1c_log.txt"
-FINAL_B_FILE = "q1_final_B.json"
+RESULTS_FILE = P("q1c_results.csv")
+LOG_FILE = P("q1c_log.txt")
+FINAL_B_FILE = P("q1_final_B.json")
 FIG_FILE = "q1c_curves"
 
 
@@ -135,8 +140,8 @@ def main():
         ax.set_ylabel(label, fontsize=8)
         ax.grid(alpha=0.3)
     fig.tight_layout()
-    fig.savefig(FIG_FILE + ".png", dpi=200)
-    fig.savefig(FIG_FILE + ".pdf")
+    fig.savefig(P(FIG_FILE + ".png"), dpi=200)
+    fig.savefig(P(FIG_FILE + ".pdf"))
 
 
 if __name__ == "__main__":

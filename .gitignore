@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Dataset downloaded automatically by scikit-learn
+scikit_learn_data/
+
+# LaTeX build files
+report/*.aux
+report/*.log
+report/*.out
+report/*.bbl
+report/*.blg
+
+# Uncomment only if a .joblib file is larger than 100 MB (GitHub limit)
+# models/*.joblib

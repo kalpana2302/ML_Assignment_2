@@ -1,3 +1,15 @@
+"""
+Q2(a): one complete SAMME round on a 3-class toy example with 10 samples, using the SAME
+SAMME class (samme.py) that is used on the faces.
+
+Toy data: one feature x = 1..10, labels y (3 classes), weak learner = decision stump (depth 1).
+Run:  python q2a.py
+"""
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import numpy as np
 from samme import SAMME
 
@@ -27,5 +39,5 @@ lines += ["",
           f"sum of updated weights = {w1.sum():.4f}"]
 text = "\n".join(lines)
 print(text)
-with open("q2a_log.txt", "w") as f:
+with open(P("q2a_log.txt"), "w") as f:
     f.write(text + "\n")

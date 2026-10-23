@@ -1,4 +1,23 @@
+"""
+Q1(d): frozen single tree vs final bagged model on the clean and masked test sets.
 
+- Frozen tree: DecisionTreeClassifier(**config) from q1_config.json, fit on the clean training set.
+- Final bagged model: the ensemble of size final_B (q1_final_B.json) from q1_bagging_models.joblib.
+- Accuracy and mean prediction confidence over all 80 test images, for both sets:
+    tree     confidence = probability of its predicted class (training class fraction in the leaf)
+    bagging  confidence = winning vote fraction (winning votes / B)
+- Case studies, on BOTH test sets: two faces where bagging is correct and the tree is wrong, and two
+  faces where both are wrong. Selection rule: lowest positions in the test set.
+  For each face: true label, tree prediction and confidence, bagging prediction, top-3 vote counts
+  and the votes received by the true class. Figures are saved per test set.
+
+Run:  python q1d.py       (requires outputs of q1a.py, q1b.py, q1c.py)
+"""
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import numpy as np
 import joblib
@@ -9,10 +28,10 @@ from sklearn.tree import DecisionTreeClassifier
 from split_data import load_split
 from q1b import MODELS_FILE, CONFIG_FILE, tree_predictions, vote_counts, accuracy
 
-FINAL_B_FILE = "q1_final_B.json"
-SUMMARY_FILE = "q1d_summary.csv"
-CASES_FILE = "q1d_cases.csv"
-LOG_FILE = "q1d_log.txt"
+FINAL_B_FILE = P("q1_final_B.json")
+SUMMARY_FILE = P("q1d_summary.csv")
+CASES_FILE = P("q1d_cases.csv")
+LOG_FILE = P("q1d_log.txt")
 N_PER_CATEGORY = 2
 
 
@@ -97,8 +116,8 @@ def main():
             ax.axis("off")
         fig.suptitle(f"{name} test set (B = {final_B})", fontsize=8)
         fig.tight_layout()
-        fig.savefig(f"q1d_cases_{name}.png", dpi=200)
-        fig.savefig(f"q1d_cases_{name}.pdf")
+        fig.savefig(P(f"q1d_cases_{name}.png"), dpi=200)
+        fig.savefig(P(f"q1d_cases_{name}.pdf"))
         plt.close(fig)
         log.append("")
 

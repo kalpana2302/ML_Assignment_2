@@ -1,3 +1,31 @@
+"""
+Q3: bias and variance as measured quantities (parts a-d, one pass over 30 refits).
+
+Resampling: 30 new training sets, each made by drawing, WITHIN each identity, 6 faces with replacement
+from that identity's 6 original training faces. One generator default_rng(242005) is used for everything:
+first the 30 resamples (saved to q3_resamples.npy), then the bagging bootstrap draws in the fixed order
+below (so the script must be run as a whole). Tree / boosting random_state = 242005.
+
+Per repetition r (nothing is re-tuned):
+  single trees at 3 settings : shallow (max_depth=4, msl=4), selected (Q1 config), deeper (None, msl=1)
+  bagging, final B (Q1)      : bootstrap of size 240 from the resampled set, as in Q1(b)
+  bagging, 100 trees         : at the same three settings
+  boosting                   : selected depth/rounds from q2_config.json (SAMME)
+Class vectors p_r(x_i) on the clean test set: tree = one-hot prediction; bagging = vote fractions
+(votes / B); boosting = normalised weighted vote q_k(x).
+Bias^2 = mean_i ||pbar_i - e_i||^2 ; Variance = mean_{i,r} ||p_r_i - pbar_i||^2 (N = 80 test faces).
+Accuracy mean/std over the 30 refits: population std (ddof = 0).
+Tree disagreement of the 100-tree ensembles: mean pairwise disagreement on the clean test set,
+averaged over refits. Leaf statistics are counted on the rows of each resampled training set
+(duplicate rows count separately), averaged over refits.
+
+Run:  python q3.py        (requires outputs of q1 and q2b; takes a while: ~700 trees per refit)
+"""
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P as OUT  # noqa: E402
 import json
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
@@ -13,9 +41,9 @@ Xtr, ytr = d["X_train"], d["y_train"]
 Xte, Xte_m, yte = d["X_test"], d["X_test_masked"], d["y_test"]
 with open(CONFIG_FILE) as f:
     q1cfg = json.load(f)
-with open("q1_final_B.json") as f:
+with open(OUT("q1_final_B.json")) as f:
     final_B = json.load(f)["final_B"]
-with open("q2_config.json") as f:
+with open(OUT("q2_config.json")) as f:
     q2cfg = json.load(f)
 
 SETTINGS = {"shallow": {"max_depth": 4, "min_samples_leaf": 4, "random_state": SEED},
@@ -33,7 +61,7 @@ rng = np.random.default_rng(SEED)
 pos_by_id = [np.where(ytr == c)[0] for c in range(K)]
 resamples = np.array([np.concatenate([rng.choice(p, size=len(p), replace=True) for p in pos_by_id])
                       for _ in range(R)])
-np.save("q3_resamples.npy", resamples)
+np.save(OUT("q3_resamples.npy"), resamples)
 distinct = np.mean([len(np.unique(r)) for r in resamples]) / K
 
 # ---- 2. refits ----
@@ -119,11 +147,11 @@ for label, key in MAIN:
 
 text = "\n".join(out)
 print(text)
-with open("q3_log.txt", "w") as f:
+with open(OUT("q3_log.txt"), "w") as f:
     f.write(text + "\n")
 for tag, start, stop in (("q3a", "=== Q3(a)", "=== Q3(b)"), ("q3b", "=== Q3(b)", "=== Q3(d)"), ("q3d", "=== Q3(d)", None)):
     s0 = text.index(start)
     s1 = text.index(stop) if stop else len(text)
-    with open(f"{tag}.csv", "w") as f:
+    with open(OUT(f"{tag}.csv"), "w") as f:
         f.write("\n".join(text[s0:s1].strip().split("\n")[1:]) + "\n")
-np.savez("q3_raw.npz", **{k: np.array(v) for k, v in P.items()})
+np.savez(OUT("q3_raw.npz"), **{k: np.array(v) for k, v in P.items()})

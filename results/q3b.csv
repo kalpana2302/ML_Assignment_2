@@ -1,0 +1,4 @@
+setting,max_depth,min_leaf,depth_reached,leaves,rows_per_leaf,single_row_leaf_frac,tree_bias2,tree_var,bag_bias2,bag_var,var_removed,var_removed_pct,tree_acc,bag_acc,acc_gain,bag_disagreement
+shallow,4,4,4.0,5.2,46.36,0.0000,1.6710,0.1281,0.8872,0.0150,0.1131,88.3,0.1004,0.2667,0.1663,0.9468
+selected,None,4,36.1,40.0,6.00,0.0000,0.3609,0.6066,0.5192,0.0287,0.5779,95.3,0.5162,0.7329,0.2167,0.8165
+deeper,None,1,36.1,40.0,6.00,0.0000,0.3609,0.6066,0.4908,0.0280,0.5785,95.4,0.5162,0.7550,0.2388,0.8021

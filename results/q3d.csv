@@ -1,0 +1,4 @@
+model,clean_acc,masked_acc,masked_minus_clean,bias2,variance,acc_std_clean,acc_std_masked
+single tree (selected: depth None, leaf 4),0.5162,0.2842,-0.2321,0.3609,0.6066,0.0427,0.1438
+bagging (B=200),0.7413,0.5958,-0.1454,0.5174,0.0245,0.0419,0.1022
+boosting (depth 4, 100 rounds),0.3638,0.2892,-0.0746,0.8767,0.0174,0.0867,0.0922

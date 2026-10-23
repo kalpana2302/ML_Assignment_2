@@ -8,6 +8,11 @@ The chosen setting is frozen into q1_config.json and reused by Q1(b), (c), (d).
 
 Run:  python q1a.py        (requires split.npz from split_data.py)
 """
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
@@ -16,9 +21,9 @@ from split_data import load_split
 TREE_SEED = 242005
 DEPTHS = [2, 4, 8, 16, None]
 MIN_LEAVES = [1, 2, 4]
-CONFIG_FILE = "q1_config.json"
-RESULTS_FILE = "q1a_grid_results.csv"
-LOG_FILE = "q1a_log.txt"
+CONFIG_FILE = P("q1_config.json")
+RESULTS_FILE = P("q1a_grid_results.csv")
+LOG_FILE = P("q1a_log.txt")
 
 
 def leaf_stats(tree, X_train):

@@ -15,6 +15,11 @@ so that Q1(c) and Q1(d) reuse exactly the same models.
 
 Run:  python q1b.py       (requires split.npz and q1_config.json)
 """
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import numpy as np
 import joblib
@@ -24,10 +29,10 @@ from split_data import load_split
 SEED = 242005
 N_CLASSES = 40
 B_VALUES = [1, 5, 10, 25, 50, 100, 200]
-CONFIG_FILE = "q1_config.json"
-MODELS_FILE = "q1_bagging_models.joblib"
-RESULTS_FILE = "q1b_results.csv"
-LOG_FILE = "q1b_log.txt"
+CONFIG_FILE = P("q1_config.json")
+MODELS_FILE = P("q1_bagging_models.joblib")
+RESULTS_FILE = P("q1b_results.csv")
+LOG_FILE = P("q1b_log.txt")
 
 
 def load_config():

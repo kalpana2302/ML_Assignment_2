@@ -1,3 +1,19 @@
+"""
+Q2(b): SAMME on Olivetti faces. Depths {1,2,3,4} x rounds {10,25,50,100}.
+Selection on CLEAN VALIDATION accuracy only; ties -> shallowest depth, then fewest rounds.
+For each depth one 100-round model is trained and the first T learners are evaluated
+(identical to training T rounds, since the weak learner seed is fixed).
+Then the selected (depth, rounds) is refit, frozen (q2_config.json, q2_selected_model.joblib) and its
+weighted training error, learner weight, maximum sample weight and the weight of the 10 heaviest
+training images are plotted over rounds (weights = those used to fit each round).
+
+Run:  python q2b.py       (requires split.npz)
+"""
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path[:0] = [str(_ROOT / "common"), str(_ROOT / "q1")]
+from paths import P  # noqa: E402
 import json
 import numpy as np
 import joblib
@@ -31,16 +47,16 @@ for depth in DEPTHS:
 
 best = min(rows, key=lambda r: (-r["val_acc"], r["depth"], r["rounds"]))
 cfg = {"depth": best["depth"], "rounds": best["rounds"], "random_state": SEED}
-with open("q2_config.json", "w") as f:
+with open(P("q2_config.json"), "w") as f:
     json.dump(cfg, f, indent=2)
 
 sel = SAMME(cfg["depth"], cfg["rounds"], K, SEED).fit(Xtr, ytr)     # selected model, frozen
-joblib.dump(sel, "q2_selected_model.joblib")
+joblib.dump(sel, P("q2_selected_model.joblib"))
 
 header = ["depth", "rounds", "rounds_used", "train_acc", "val_acc"]
 lines = [",".join(header)] + [",".join(str(r[h]) if h in header[:3] else f"{r[h]:.4f}" for h in header)
                               for r in rows]
-with open("q2b_grid.csv", "w") as f:
+with open(P("q2b_grid.csv"), "w") as f:
     f.write("\n".join(lines) + "\n")
 
 T = len(sel.learners)
@@ -57,7 +73,7 @@ text = "\n".join(["=== Q2(b) grid (clean validation accuracy used for selection)
                   f"weight of 10 heaviest images: largest over rounds {top10.max():.4f}",
                   *notes])
 print(text)
-with open("q2b_log.txt", "w") as f:
+with open(P("q2b_log.txt"), "w") as f:
     f.write(text + "\n")
 
 r = np.arange(1, T + 1)
@@ -70,5 +86,5 @@ for ax, (y_, lab) in zip(axes.ravel(), [(sel.eps, "Weighted training error"), (s
     ax.tick_params(labelsize=7)
     ax.grid(alpha=0.3)
 fig.tight_layout()
-fig.savefig("q2b_curves.png", dpi=200)
-fig.savefig("q2b_curves.pdf")
+fig.savefig(P("q2b_curves.png"), dpi=200)
+fig.savefig(P("q2b_curves.pdf"))
