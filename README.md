@@ -24,7 +24,7 @@ report/    main.tex                            report source
 
 ## Environment
 
-- Python: `<fill in the output of: python --version>`
+- Python: `3.11.14`
 - Libraries: see `requirements.txt` (numpy, scikit-learn, matplotlib, joblib)
 
 ```
