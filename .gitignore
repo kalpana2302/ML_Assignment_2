@@ -14,3 +14,5 @@ report/*.blg
 
 # Uncomment only if a .joblib file is larger than 100 MB (GitHub limit)
 # models/*.joblib
+figures/*.pdf
+figures/*.pdf
